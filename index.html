@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Test</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.0-rc.5/angular-material.js"></script>
+
+
+    <script src="js/blog.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.0-rc.5/angular-material.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-app="blogMch" ng-controller="BlogController as blog">
+<md-toolbar class="md-hue-2">
+    <div class="bar">
+        <div class="container">
+            <div class="col-md-3 bar-left"><h1 ng-click="blog.choose('main')">{{blog.title}}</h1></div>
+
+            <div class="col-md-9 bar-right">
+                <nav class="{{active}}" ng-click="$event.preventDefault()">
+                    <a href="#" class="home" ng-click="blog.choose('main')">Home</a>
+                    <a href="#" class="services" ng-click="blog.choose('add')">add new</a>
+                    <a href="#" class="contact" ng-click="blog.choose('contact')">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</md-toolbar>
+    <div class="container">
+
+        <div class="row" ng-show="blog.select('main')">
+            <div class="col-md-4" ng-repeat="post in blog.posts">
+
+                <md-card>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-headline" ng-click="blog.choose('post')">{{post.title}}</span>
+                            <span class="md-subhead">{{post.body[0] | limitTo:150}}
+                                <i class="fa fa-arrow-circle-o-right" ng-click="blog.choose('post')" aria-hidden="true"></i></span>
+                        </md-card-title-text>
+                    </md-card-title>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <p class="fa fa-comment push-left ico">{{post.comments.length}}</p>
+                        <p class="fa fa-heart push-right ico"> {{post.likes}}</p>
+                    </md-card-actions>
+            </md-card>
+            </div>
+        </div>
+
+
+        <div class="row" ng-show="blog.select('post')">
+            <div class="col-md-12 post" ng-repeat="post in blog.posts">
+                <h2>{{post.title}}</h2>
+                <img src="{{post.image}}" ng-show="{{post.image}}"/>
+                <i>by {{post.author}} on
+                    {{post.createdOn | date}
+                </i>
+
+                <div>
+                    <p ng-repeat="paragraph in post.body">
+                        {{paragraph}}
+                    </p>
+                </div>
+
+                <div class="comments" ng-controller="Comment as commentCtrl">
+                    <button class="fa fa-heart" ng-click="post.likes = post.likes+1"> {{post.likes}}</button>
+                    <h3>Comments</h3>
+                    <ul>
+                        <li ng-repeat="comment in post.comments">
+                            "{{comment.body}}"
+                            <i>- <b>{{comment.author}}</b></i>
+                        </li>
+                    </ul>
+                    <form name="commentForm" ng-submit="commentForm.$valid && commentCtrl.addComment(post)" novalidate>
+                        <h4>Add Comment</h4>
+                        <md-input-container class="md-block" ng-model="commentCtrl.comment.author" required placeholder="Name"/>
+                            <label>First name</label>
+                            <input ng-model="user.firstName">
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Biography</label>
+                            <textarea ng-model="commentCtrl.comment.body" required md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
+                        </md-input-container>
+                        <input type="submit" value="Submit" />
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row" ng-show="blog.select('contact')">
+        chupilmarta@gmail.com
+        </div>
+        <div class="row" ng-show="blog.select('add')">
+
+
+
+            <form name="postForm" ng-submit=" blog.addPost()" novalidate>
+
+                <md-input-container class="md-block"/>
+                <label>First name</label>
+                <input type="text" ng-model="blog.post.title"/>
+                </md-input-container>
+
+                <md-input-container class="md-block"/>
+                <label>Image</label>
+                <input type="text" ng-model="blog.post.image" placeholder="url" />
+                </md-input-container>
+
+                <md-input-container class="md-block"/>
+                <label>by</label>
+                <input type="text" ng-model="blog.post.author" placeholder="Author Name" required/>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label>Text</label>
+                    <textarea ng-model="blog.post.body" ng-list="/\n/" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
+                </md-input-container>
+
+                <input type="submit" value="Submit" />
+                </select>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
